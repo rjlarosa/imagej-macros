@@ -63,7 +63,7 @@ macro "Show Multipoint Coordinates [L]" {
   print(tableTitle, "\\Clear");
 
   coordinateHeadings = "File\t";
-  for(i = 0; i < NUM_COORDINATES; i++) {
+  for(i = 1; i <= NUM_COORDINATES; i++) {
     coordinateHeadings += "x" + i + "\ty" + i + "\t";
   }
 
