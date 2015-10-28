@@ -1,0 +1,73 @@
+/**
+ * Stores multipoint coordinates in a global, and displays them in a table
+ *
+ * | File       |  x1 |  y1 |  x2 |  y2 |
+ * | ---------- | --- | --- | --- | --- |
+ * | image1.jpg | 100 |  20 | 250 | 600 |
+ * | image2.jpg |  90 |  77 |  68 |  33 |
+ */
+var MULTIPOINT_COORDINATES = "";
+
+/* Keeps track of the max number of coordinates captured, for creating table columns */
+var NUM_COORDINATES = 0;
+
+/**
+ * Returns a string created by converting each element of the array to a string,
+ * then joins the elements with the given separator
+ *
+ * arr: The array to join
+ * sep: The separator to use between each array element
+ */
+function arrayJoin(arr, sep) {
+  buf = "";
+  for(i = 0; i < arr.length; i++) {
+    /* Leading empty string convinces ImageJ to coerce all components to strings */
+    buf += "" + arr[i] + sep;
+  }
+
+  return buf;
+}
+
+macro "Set Multipoint Coordinates [j]" {
+  getSelectionCoordinates(x, y);
+  coords = newArray((x.length * 2) + 1);
+  coords[0] = getInfo("image.filename");
+
+  ci = 1;
+  for(i = 0; i < x.length; i++) {
+    coords[ci++] = x[i];
+    coords[ci++] = y[i];
+  }
+
+  if(x.length > NUM_COORDINATES) {
+    NUM_COORDINATES = x.length;
+  }
+
+  /* The += operator doesn't seem to work on globals?! */
+  MULTIPOINT_COORDINATES = MULTIPOINT_COORDINATES + arrayJoin(coords, "\t") + "\n";
+  showStatus("Set multipoint coordinates");
+}
+
+macro "Clear Multipoint Coordinates [J]" {
+  MULTIPOINT_COORDINATES = "";
+  NUM_COORDINATES = 0;
+  showStatus("Cleared multipoint coordinates");
+}
+
+macro "Show Multipoint Coordinates [L]" {
+  table = "Multipoint Coordinates";
+  tableTitle = "[" + table + "]"
+  if(!isOpen(table)) {
+    run("New... ", "name=" + tableTitle + " type=Table");
+  }
+  print(tableTitle, "\\Clear");
+
+  coordinateHeadings = "File\t";
+  for(i = 1; i <= NUM_COORDINATES; i++) {
+    coordinateHeadings += "x" + i + "\ty" + i + "\t";
+  }
+
+  print(tableTitle, "\\Headings:\n" + coordinateHeadings);
+  print(tableTitle, MULTIPOINT_COORDINATES);
+  showStatus("Displayed multipoint coordinates");
+}
