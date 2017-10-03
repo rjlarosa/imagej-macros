@@ -113,7 +113,7 @@ macro "Measure Length 10 [n0]" { length10 = getLength(10); }
 /* Display the measured lengths */
 macro "Display Results [P]"  { displayResults() };
 
-/* Set the scale to 05mm */
+/* Set the scale to 550um */
 macro "Set Scale [s]"
 {
   /* Reset the scale first */
