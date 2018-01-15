@@ -113,7 +113,7 @@ macro "Measure Length 10 [n0]" { length10 = getLength(10); }
 /* Display the measured lengths */
 macro "Display Results [P]"  { displayResults() };
 
-/* Set the scale to 550um */
+/* Set the scale to 5cm */
 macro "Set Scale [s]"
 {
   /* Reset the scale first */
@@ -122,6 +122,6 @@ macro "Set Scale [s]"
   length = getLength(-1);
   if(length == -1) exit("A line is required to set the scale.");
   
-  run("Set Scale...", "distance=" + length + " known=550 pixel=1 unit=um");
-  showStatus("Set scale - " + length + " = 550 um");
+  run("Set Scale...", "distance=" + length + " known=5 pixel=1 unit=cm");
+  showStatus("Set scale - " + length + " = 5 cm");
 }
